@@ -8,7 +8,7 @@ public class MinesweeperModel {
     private int boardSize;
     private int totalMines;
 
-    static enum ETileType {SAFE, CHECKED, BOMB, FLAG}
+    public static enum ETileType {SAFE, CHECKED, BOMB, FLAG}
     private ArrayList<ArrayList<ETileType>> model = null;
 
 
