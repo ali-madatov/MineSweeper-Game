@@ -1,10 +1,12 @@
 package uni.minesweeper;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.gc.materialdesign.views.ButtonFloat;
+import com.gc.materialdesign.views.ButtonRectangle;
 import com.gc.materialdesign.views.Slider;
 
 public class IntroActivity extends AppCompatActivity {
@@ -51,6 +53,19 @@ public class IntroActivity extends AppCompatActivity {
         ButtonFloat btnDecrease = findViewById(R.id.btnDecrease);
         btnDecrease.setOnClickListener(createFloatBtnListener(false));
         btnIncrease.setOnClickListener(createFloatBtnListener(true));
+
+        final ButtonRectangle btnPlay = findViewById(R.id.btnPlay);
+        final IntroActivity _this = this;
+
+        btnPlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent playIntent = new Intent(_this, PlayActivity.class);
+                playIntent.putExtra("boardSize", boardSize);
+                playIntent.putExtra("totalMines", totalMines);
+                startActivity(playIntent);
+            }
+        });
     }
 
     private View.OnClickListener createFloatBtnListener(final boolean isIncrease) {
