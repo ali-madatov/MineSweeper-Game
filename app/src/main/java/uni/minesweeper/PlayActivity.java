@@ -10,7 +10,6 @@ public class PlayActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_play);
 
         Intent startIntent = getIntent();
 
@@ -21,5 +20,7 @@ public class PlayActivity extends AppCompatActivity {
         model.setSize(boardSize);
         model.setTotalMines(totalMines);
         model.resetModel();
+
+        setContentView(R.layout.activity_play);
     }
 }

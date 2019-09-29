@@ -18,7 +18,7 @@ public class MinesweeperModel {
 
     public static MinesweeperModel getSingletonInstance() {
         if (singletonInstance == null)
-            return new MinesweeperModel();
+            singletonInstance = new MinesweeperModel();
 
         return singletonInstance;
     }
@@ -70,5 +70,13 @@ public class MinesweeperModel {
 
     public ETileType getTile(int row, int col) {
         return model.get(row).get(col);
+    }
+
+    public int getBoardSize() {
+        return boardSize;
+    }
+
+    public int getTotalMines() {
+        return totalMines;
     }
 }
