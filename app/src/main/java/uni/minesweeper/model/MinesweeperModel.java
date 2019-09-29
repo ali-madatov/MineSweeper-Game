@@ -9,12 +9,10 @@ public class MinesweeperModel {
     private int totalMines;
 
     static enum ETileType {SAFE, CHECKED, BOMB, FLAG}
+    private ArrayList<ArrayList<ETileType>> model = null;
 
-    private ArrayList<ArrayList<ETileType>> model = new ArrayList<>();
 
-
-    private MinesweeperModel() {
-    }
+    private MinesweeperModel() {}
 
     public static MinesweeperModel getSingletonInstance() {
         if (singletonInstance == null)
@@ -39,6 +37,8 @@ public class MinesweeperModel {
 
             return;
         }
+
+        model = new ArrayList<>();
 
         // Create board
         for (int i = 0; i < boardSize; ++i) {
