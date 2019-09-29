@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import androidx.core.content.res.ResourcesCompat;
 import uni.minesweeper.R;
@@ -20,6 +21,7 @@ public class MinesweeperView extends View {
     private MinesweeperModel model;
     private Drawable bombDrawable;
     private Drawable flagDrawable;
+    private Drawable flagLossDrawable;
     private Rect imageBounds;
 
     public MinesweeperView(Context context, AttributeSet attrs) {
@@ -28,6 +30,7 @@ public class MinesweeperView extends View {
         model = MinesweeperModel.getSingletonInstance();
         bombDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_bomb, null);
         flagDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_flag, null);
+        flagLossDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_broken_flag, null);
         imageBounds = new Rect(0, 0, 0, 0);
 
         linePaint = new Paint();
@@ -70,17 +73,20 @@ public class MinesweeperView extends View {
                 int top = (int) (i * stepY);
                 int bottom = (int) ((i + 1) * stepY);
 
+                imageBounds.set(left, top, right, bottom);
+
                 switch (model.getTile(i, j)) {
-                    case BOMB:
-                        imageBounds.set(left, top, right, bottom);
+                    case BOMB_LOSS:
                         bombDrawable.setBounds(imageBounds);
                         bombDrawable.draw(canvas);
                         break;
                     case FLAG:
-                        imageBounds.set(left, top, right, bottom);
                         flagDrawable.setBounds(imageBounds);
                         flagDrawable.draw(canvas);
                         break;
+                    case FLAG_LOSS:
+                        flagLossDrawable.setBounds(imageBounds);
+                        flagLossDrawable.draw(canvas);
                     case CHECKED:
                         final int coloredPadding = 20;
                         left += coloredPadding;
@@ -93,5 +99,26 @@ public class MinesweeperView extends View {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            int clickedRow = ((int) event.getY()) / (getHeight() / model.getBoardSize());
+            int clickedCol = ((int) event.getX()) / (getWidth() / model.getBoardSize());
+
+            switch (model.getTile(clickedRow, clickedCol)) {
+                case SAFE:
+                    model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.CHECKED);
+                    break;
+                case BOMB_LOSS:
+                    model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.BOMB_LOSS);
+                    break;
+            }
+
+            invalidate();
+        }
+
+        return true;
     }
 }
