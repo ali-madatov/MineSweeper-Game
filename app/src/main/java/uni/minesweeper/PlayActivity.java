@@ -13,20 +13,32 @@ public class PlayActivity extends AppCompatActivity {
     private MinesweeperModel model = null;
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putBoolean("isFlagMode", isFlagMode);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play);
 
         model = MinesweeperModel.getSingletonInstance();
-
         final ToggleButton btnToggleMode = findViewById(R.id.btnToggleMode);
-        btnToggleMode.setText(getApplicationContext().getString(R.string.mode, isFlagMode ? "FLAG" : "CHECK"));
+
+        if (savedInstanceState != null) {
+            isFlagMode = savedInstanceState.getBoolean("isFlagMode");
+        }
+
+        btnToggleMode.setTextOn(getApplicationContext().getString(R.string.mode, "FLAG"));
+        btnToggleMode.setTextOff(getApplicationContext().getString(R.string.mode, "CHECK"));
+        btnToggleMode.setChecked(isFlagMode);
 
         btnToggleMode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isFlagMode = !isFlagMode;
-                btnToggleMode.setText(getApplicationContext().getString(R.string.mode, isFlagMode ? "FLAG" : "CHECK"));
+                btnToggleMode.setChecked(isFlagMode);
                 model.setFlagMode(isFlagMode);
             }
         });

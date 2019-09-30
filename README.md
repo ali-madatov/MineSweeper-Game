@@ -3,3 +3,5 @@
 #### Developed and tested on API level 28 (Pie, v9.0) and API level 24 (Nougat, v7.0)
 
 Minesweeper launcher icon: http://www.rw-designer.com/icon-detail/3078 - Made by Sirea
+
+Github repo link: https://github.com/ErrorJIC/BMEMinesweeperHW
