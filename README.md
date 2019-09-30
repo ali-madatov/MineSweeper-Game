@@ -5,3 +5,9 @@
 Minesweeper launcher icon: http://www.rw-designer.com/icon-detail/3078 - Made by Sirea
 
 Github repo link: https://github.com/ErrorJIC/BMEMinesweeperHW
+
+Slider: https://github.com/Ramotion/fluid-slider-android
+
+MD library: https://github.com/navasmdc/MaterialDesignLibrary
+
+Compiled using Java version 1.8 (in Gradle config)

@@ -162,7 +162,7 @@ public class MinesweeperView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!isGameOver && event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (!isGameOver && event.getAction() == MotionEvent.ACTION_UP) {
             int clickedRow = ((int) event.getY()) / (getHeight() / model.getBoardSize());
             int clickedCol = ((int) event.getX()) / (getWidth() / model.getBoardSize());
 

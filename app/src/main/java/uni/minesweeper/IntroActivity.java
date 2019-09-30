@@ -7,7 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.gc.materialdesign.views.ButtonFloat;
 import com.gc.materialdesign.views.ButtonRectangle;
-import com.gc.materialdesign.views.Slider;
+import com.ramotion.fluidslider.FluidSlider;
+import kotlin.Unit;
 import uni.minesweeper.model.MinesweeperModel;
 
 public class IntroActivity extends AppCompatActivity {
@@ -30,7 +31,6 @@ public class IntroActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intro);
 
-        final Slider sizeSlider = findViewById(R.id.boardSlider);
         final TextView sizeTextView = findViewById(R.id.sizeTextView);
         final TextView minesTextView = findViewById(R.id.minesTextView);
 
@@ -40,27 +40,27 @@ public class IntroActivity extends AppCompatActivity {
         }
 
         boardSize = (boardSize == 0) ? BOARD_MIN_SIZE : boardSize;
-        sizeTextView.setText(getApplicationContext().getString(R.string.board_size, String.valueOf(boardSize)));
-
-        sizeSlider.requestFocus();
-        sizeSlider.setMin(BOARD_MIN_SIZE);
-        sizeSlider.setMax(BOARD_MAX_SIZE);
-        sizeSlider.setValue(boardSize);
-
         totalMines = (totalMines == 0) ? MINES_MIN : totalMines;
+        sizeTextView.setText(getApplicationContext().getString(R.string.board_size, String.valueOf(boardSize)));
         minesTextView.setText(String.valueOf(totalMines));
 
-        sizeSlider.setOnValueChangedListener(new Slider.OnValueChangedListener() {
-            @Override
-            public void onValueChanged(int value) {
-                boardSize = value;
-                sizeTextView.setText(getApplicationContext().getString(R.string.board_size, String.valueOf(boardSize)));
+        final FluidSlider sizeSlider = findViewById(R.id.sizeSlider);
+        sizeSlider.setStartText(String.valueOf(BOARD_MIN_SIZE));
+        sizeSlider.setEndText(String.valueOf(BOARD_MAX_SIZE));
+        sizeSlider.setBubbleText(String.valueOf(boardSize));
+        sizeSlider.setPosition(0);
 
-                if (totalMines > boardSize * boardSize) {
-                    totalMines = boardSize * boardSize;
-                    minesTextView.setText(String.valueOf(totalMines));
-                }
+        sizeSlider.setPositionListener(value -> {
+            boardSize = (int) (value * (BOARD_MAX_SIZE - BOARD_MIN_SIZE)) + BOARD_MIN_SIZE;
+            sizeTextView.setText(getApplicationContext().getString(R.string.board_size, String.valueOf(boardSize)));
+            sizeSlider.setBubbleText(String.valueOf(boardSize));
+
+            if (totalMines > boardSize * boardSize) {
+                totalMines = boardSize * boardSize;
+                minesTextView.setText(String.valueOf(totalMines));
             }
+
+            return Unit.INSTANCE;
         });
 
         ButtonFloat btnIncrease = findViewById(R.id.btnIncrease);
