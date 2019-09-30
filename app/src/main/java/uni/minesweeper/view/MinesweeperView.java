@@ -20,6 +20,7 @@ public class MinesweeperView extends View {
     private Paint linePaint;
     private Paint backgroundPaint;
     private Paint paddingPaint;
+    private Paint paintText;
 
     private MinesweeperModel model;
 
@@ -55,6 +56,9 @@ public class MinesweeperView extends View {
         paddingPaint = new Paint();
         paddingPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPadding, null));
         paddingPaint.setStyle(Paint.Style.FILL);
+
+        paintText = new Paint();
+        paintText.setColor(Color.LTGRAY);
     }
 
 
@@ -99,6 +103,15 @@ public class MinesweeperView extends View {
                     bottom -= coloredPadding;
                     imageBounds.set(left, top, right, bottom);
                     canvas.drawRect(imageBounds, paddingPaint);
+
+                    if (model.getNearbyBombs(i, j) != 0) {
+                        canvas.drawText(
+                            String.valueOf(model.getNearbyBombs(i, j)),
+                            left + stepX / 4,
+                            bottom - stepY / 4,
+                            paintText
+                        );
+                    }
                 } else if (currTile == MinesweeperModel.ETileType.BOMB) {
                     allBombsFlagged = false;
 
@@ -124,6 +137,12 @@ public class MinesweeperView extends View {
     }
 
     @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        paintText.setTextSize((float) (getHeight() / model.getBoardSize()) / 2);
+    }
+
+    @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!isGameOver && event.getAction() == MotionEvent.ACTION_DOWN) {
             int clickedRow = ((int) event.getY()) / (getHeight() / model.getBoardSize());
@@ -135,8 +154,9 @@ public class MinesweeperView extends View {
                         model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.FLAG_LOSS);
                         endGame(true);
                     } else {
-                        model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.SAFE_CHECKED);
+                        recursiveExpand(clickedRow, clickedCol);
                     }
+
                     break;
                 case BOMB:
                     if (model.isFlagMode()) {
@@ -145,6 +165,7 @@ public class MinesweeperView extends View {
                         model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.BOMB_LOSS);
                         endGame(true);
                     }
+
                     break;
             }
 
@@ -154,6 +175,28 @@ public class MinesweeperView extends View {
         return true;
     }
 
+    private void recursiveExpand(int row, int col) {
+        if (model.getTile(row, col) == MinesweeperModel.ETileType.SAFE_CHECKED)
+            return;
+
+        if (model.getTile(row, col) == MinesweeperModel.ETileType.SAFE)
+            model.setTile(row, col, MinesweeperModel.ETileType.SAFE_CHECKED);
+
+        if (model.getNearbyBombs(row, col) == 0) {
+            for (int i = row - 1; i <= row + 1; ++i) {
+                if (i < 0 || i >= model.getBoardSize())
+                    continue;
+
+                for (int j = col - 1; j <= col + 1; ++j) {
+                    if (j < 0 || j >= model.getBoardSize())
+                        continue;
+
+                    recursiveExpand(i, j);
+                }
+            }
+        }
+    }
+
     private void endGame(boolean isLoss) {
         isGameOver = true;
 
@@ -161,7 +204,7 @@ public class MinesweeperView extends View {
 
         final String message =
             (isLoss ? "Whoops! You lost!" : "Congratulations! You won the game!") +
-            "\n\nPress \"" + buttonText + "\" to start a new game.";
+                "\n\nPress \"" + buttonText + "\" to start a new game.";
 
         Dialog dialog = new Dialog(getContext(), "Game Over!", message);
         dialog.show();

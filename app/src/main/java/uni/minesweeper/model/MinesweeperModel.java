@@ -10,7 +10,9 @@ public class MinesweeperModel {
     private boolean isFlagMode = false;
 
     public enum ETileType {SAFE, SAFE_CHECKED, BOMB, FLAG, BOMB_LOSS, FLAG_LOSS}
+
     private ArrayList<ArrayList<ETileType>> model = null;
+    private ArrayList<ArrayList<Integer>> modelBombIndicators = null;
 
 
     private MinesweeperModel() {}
@@ -33,15 +35,20 @@ public class MinesweeperModel {
 
         isFlagMode = false;
         model = new ArrayList<>();
+        modelBombIndicators = new ArrayList<>();
 
         // Create board
         for (int i = 0; i < boardSize; ++i) {
             ArrayList<ETileType> row = new ArrayList<>();
+            ArrayList<Integer> bombRow = new ArrayList<>();
 
-            for (int j = 0; j < boardSize; ++j)
+            for (int j = 0; j < boardSize; ++j) {
                 row.add(ETileType.SAFE);
+                bombRow.add(0);
+            }
 
             model.add(row);
+            modelBombIndicators.add(bombRow);
         }
 
         // Add mines
@@ -56,6 +63,35 @@ public class MinesweeperModel {
                 --mines;
             }
         }
+
+        for (int i = 0; i < modelBombIndicators.size(); ++i) {
+            for (int j = 0; j < modelBombIndicators.size(); ++j) {
+                calculateBombIndicators(i, j);
+            }
+        }
+    }
+
+    private void calculateBombIndicators(int row, int col) {
+        Integer bombIndicator = 0;
+
+        for (int i = row - 1; i <= row + 1; ++i) {
+            if (i < 0 || i >= modelBombIndicators.size())
+                continue;
+
+            for (int j = col - 1; j <= col + 1; ++j) {
+                if (j < 0 || j >= modelBombIndicators.size())
+                    continue;
+
+                if (model.get(i).get(j) == ETileType.BOMB)
+                    bombIndicator++;
+            }
+        }
+
+        modelBombIndicators.get(row).set(col, bombIndicator);
+    }
+
+    public int getNearbyBombs(int row, int col) {
+        return modelBombIndicators.get(row).get(col);
     }
 
 
