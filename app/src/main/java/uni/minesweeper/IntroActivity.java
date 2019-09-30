@@ -45,6 +45,7 @@ public class IntroActivity extends AppCompatActivity {
         sizeSlider.requestFocus();
         sizeSlider.setMin(BOARD_MIN_SIZE);
         sizeSlider.setMax(BOARD_MAX_SIZE);
+        sizeSlider.setValue(boardSize);
 
         totalMines = (totalMines == 0) ? MINES_MIN : totalMines;
         minesTextView.setText(String.valueOf(totalMines));
