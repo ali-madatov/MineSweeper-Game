@@ -76,6 +76,7 @@ public class MinesweeperView extends View {
         }
 
         boolean hasSafeTiles = false;
+        boolean allBombsFlagged = true;
 
         // Draw tiles
         for (int i = 0; i < size; ++i) {
@@ -98,9 +99,13 @@ public class MinesweeperView extends View {
                     bottom -= coloredPadding;
                     imageBounds.set(left, top, right, bottom);
                     canvas.drawRect(imageBounds, paddingPaint);
-                } else if (currTile == MinesweeperModel.ETileType.BOMB && isGameOver) {
-                    bombDrawable.setBounds(imageBounds);
-                    bombDrawable.draw(canvas);
+                } else if (currTile == MinesweeperModel.ETileType.BOMB) {
+                    allBombsFlagged = false;
+
+                    if (isGameOver) {
+                        bombDrawable.setBounds(imageBounds);
+                        bombDrawable.draw(canvas);
+                    }
                 } else if (currTile == MinesweeperModel.ETileType.BOMB_LOSS) {
                     bombLossDrawable.setBounds(imageBounds);
                     bombLossDrawable.draw(canvas);
@@ -114,7 +119,7 @@ public class MinesweeperView extends View {
             }
         }
 
-        if (!hasSafeTiles)
+        if (!hasSafeTiles || allBombsFlagged)
             endGame(false);
     }
 
@@ -126,11 +131,20 @@ public class MinesweeperView extends View {
 
             switch (model.getTile(clickedRow, clickedCol)) {
                 case SAFE:
-                    model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.SAFE_CHECKED);
+                    if (model.isFlagMode()) {
+                        model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.FLAG_LOSS);
+                        endGame(true);
+                    } else {
+                        model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.SAFE_CHECKED);
+                    }
                     break;
                 case BOMB:
-                    model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.BOMB_LOSS);
-                    endGame(true);
+                    if (model.isFlagMode()) {
+                        model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.FLAG);
+                    } else {
+                        model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.BOMB_LOSS);
+                        endGame(true);
+                    }
                     break;
             }
 

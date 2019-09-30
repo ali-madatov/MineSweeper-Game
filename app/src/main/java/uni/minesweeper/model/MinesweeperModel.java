@@ -7,8 +7,9 @@ public class MinesweeperModel {
     private static MinesweeperModel singletonInstance = null;
     private int boardSize;
     private int totalMines;
+    private boolean isFlagMode = false;
 
-    public static enum ETileType {SAFE, SAFE_CHECKED, BOMB, FLAG, BOMB_LOSS, FLAG_LOSS}
+    public enum ETileType {SAFE, SAFE_CHECKED, BOMB, FLAG, BOMB_LOSS, FLAG_LOSS}
     private ArrayList<ArrayList<ETileType>> model = null;
 
 
@@ -21,14 +22,6 @@ public class MinesweeperModel {
         return singletonInstance;
     }
 
-    public void setSize(int size) {
-        boardSize = size;
-    }
-
-    public void setTotalMines(int mines) {
-        totalMines = mines;
-    }
-
     public void resetModel() {
         if (boardSize == 0 || totalMines == 0) {
             Log.w("DBG_WARNING", "Tried to create model with " +
@@ -38,6 +31,7 @@ public class MinesweeperModel {
             return;
         }
 
+        isFlagMode = false;
         model = new ArrayList<>();
 
         // Create board
@@ -64,6 +58,7 @@ public class MinesweeperModel {
         }
     }
 
+
     public void setTile(int row, int col, ETileType type) {
         model.get(row).set(col, type);
     }
@@ -72,11 +67,27 @@ public class MinesweeperModel {
         return model.get(row).get(col);
     }
 
+    public void setSize(int size) {
+        boardSize = size;
+    }
+
     public int getBoardSize() {
         return boardSize;
     }
 
+    public void setTotalMines(int mines) {
+        totalMines = mines;
+    }
+
     public int getTotalMines() {
         return totalMines;
+    }
+
+    public boolean isFlagMode() {
+        return isFlagMode;
+    }
+
+    public void setFlagMode(boolean isFlag) {
+        isFlagMode = isFlag;
     }
 }

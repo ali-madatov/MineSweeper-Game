@@ -10,27 +10,29 @@
   <uni.minesweeper.view.MinesweeperView
       android:layout_width="match_parent"
       android:layout_height="0dp"
-      android:layout_weight="19"/>
+      android:layout_weight="19" />
 
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
       android:weightSum="2"
-      android:layout_weight="1">
+      android:layout_weight="1"
+      tools:ignore="NestedWeights">
 
-    <Button
+    <ToggleButton
+        android:id="@+id/btnToggleMode"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="ok"
-        tools:ignore="ButtonStyle"
-        android:layout_weight="1"/>
+        android:text="@string/mode"
+        android:layout_weight="1" />
 
     <Button
+        android:id="@+id/btnNewGame"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="ok"
+        android:text="@string/new_game"
         tools:ignore="ButtonStyle"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
   </LinearLayout>
 </LinearLayout>
