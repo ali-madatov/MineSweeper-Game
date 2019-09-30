@@ -19,16 +19,23 @@ public class MinesweeperView extends View {
     private Paint paddingPaint;
 
     private MinesweeperModel model;
+
     private Drawable bombDrawable;
+    private Drawable bombLossDrawable;
+
     private Drawable flagDrawable;
     private Drawable flagLossDrawable;
+
     private Rect imageBounds;
+    private boolean isGameOver = false;
 
     public MinesweeperView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         model = MinesweeperModel.getSingletonInstance();
+
         bombDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_bomb, null);
+        bombLossDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_explosion, null);
         flagDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_flag, null);
         flagLossDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_broken_flag, null);
         imageBounds = new Rect(0, 0, 0, 0);
@@ -74,28 +81,28 @@ public class MinesweeperView extends View {
                 int bottom = (int) ((i + 1) * stepY);
 
                 imageBounds.set(left, top, right, bottom);
+                MinesweeperModel.ETileType currTile = model.getTile(i, j);
 
-                switch (model.getTile(i, j)) {
-                    case BOMB_LOSS:
-                        bombDrawable.setBounds(imageBounds);
-                        bombDrawable.draw(canvas);
-                        break;
-                    case FLAG:
-                        flagDrawable.setBounds(imageBounds);
-                        flagDrawable.draw(canvas);
-                        break;
-                    case FLAG_LOSS:
-                        flagLossDrawable.setBounds(imageBounds);
-                        flagLossDrawable.draw(canvas);
-                    case CHECKED:
-                        final int coloredPadding = 20;
-                        left += coloredPadding;
-                        right -= coloredPadding;
-                        top += coloredPadding;
-                        bottom -= coloredPadding;
-                        imageBounds.set(left, top, right, bottom);
-                        canvas.drawRect(imageBounds, paddingPaint);
-                        break;
+                if (currTile == MinesweeperModel.ETileType.SAFE_CHECKED) {
+                    final int coloredPadding = 20;
+                    left += coloredPadding;
+                    right -= coloredPadding;
+                    top += coloredPadding;
+                    bottom -= coloredPadding;
+                    imageBounds.set(left, top, right, bottom);
+                    canvas.drawRect(imageBounds, paddingPaint);
+                } else if (currTile == MinesweeperModel.ETileType.BOMB && isGameOver) {
+                    bombDrawable.setBounds(imageBounds);
+                    bombDrawable.draw(canvas);
+                } else if (currTile == MinesweeperModel.ETileType.BOMB_LOSS) {
+                    bombLossDrawable.setBounds(imageBounds);
+                    bombLossDrawable.draw(canvas);
+                } else if (currTile == MinesweeperModel.ETileType.FLAG) {
+                    flagDrawable.setBounds(imageBounds);
+                    flagDrawable.draw(canvas);
+                } else if (currTile == MinesweeperModel.ETileType.FLAG_LOSS) {
+                    flagLossDrawable.setBounds(imageBounds);
+                    flagLossDrawable.draw(canvas);
                 }
             }
         }
@@ -103,16 +110,17 @@ public class MinesweeperView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if (!isGameOver && event.getAction() == MotionEvent.ACTION_DOWN) {
             int clickedRow = ((int) event.getY()) / (getHeight() / model.getBoardSize());
             int clickedCol = ((int) event.getX()) / (getWidth() / model.getBoardSize());
 
             switch (model.getTile(clickedRow, clickedCol)) {
                 case SAFE:
-                    model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.CHECKED);
+                    model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.SAFE_CHECKED);
                     break;
-                case BOMB_LOSS:
+                case BOMB:
                     model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.BOMB_LOSS);
+                    isGameOver = true;
                     break;
             }
 
