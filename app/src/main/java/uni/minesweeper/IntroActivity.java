@@ -28,36 +28,26 @@ public class IntroActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_intro);
+
+        final Slider sizeSlider = findViewById(R.id.boardSlider);
+        final TextView sizeTextView = findViewById(R.id.sizeTextView);
+        final TextView minesTextView = findViewById(R.id.minesTextView);
 
         if (savedInstanceState != null) {
             boardSize = savedInstanceState.getInt("boardSize");
             totalMines = savedInstanceState.getInt("totalMines");
-
-            Slider sizeSlider = findViewById(R.id.boardSlider);
-            sizeSlider.setValue(boardSize);
-
-            final TextView sizeTextView = findViewById(R.id.sizeTextView);
-            sizeTextView.setText(getApplicationContext().getString(R.string.board_size, String.valueOf(boardSize)));
-
-            final TextView minesTextView = findViewById(R.id.minesTextView);
-            minesTextView.setText(String.valueOf(totalMines));
         }
 
-        setContentView(R.layout.activity_intro);
-
-        final TextView sizeTextView = findViewById(R.id.sizeTextView);
-
-        boardSize = BOARD_MIN_SIZE;
+        boardSize = (boardSize == 0) ? BOARD_MIN_SIZE : boardSize;
         sizeTextView.setText(getApplicationContext().getString(R.string.board_size, String.valueOf(boardSize)));
 
-        Slider sizeSlider = findViewById(R.id.boardSlider);
         sizeSlider.requestFocus();
         sizeSlider.setMin(BOARD_MIN_SIZE);
         sizeSlider.setMax(BOARD_MAX_SIZE);
 
-        totalMines = MINES_MIN;
-        final TextView minesTextView = findViewById(R.id.minesTextView);
-        minesTextView.setText(String.valueOf(MINES_MIN));
+        totalMines = (totalMines == 0) ? MINES_MIN : totalMines;
+        minesTextView.setText(String.valueOf(totalMines));
 
         sizeSlider.setOnValueChangedListener(new Slider.OnValueChangedListener() {
             @Override
