@@ -1,6 +1,7 @@
 package uni.minesweeper.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,6 +11,8 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.core.content.res.ResourcesCompat;
+import com.gc.materialdesign.widgets.Dialog;
+import uni.minesweeper.IntroActivity;
 import uni.minesweeper.R;
 import uni.minesweeper.model.MinesweeperModel;
 
@@ -72,6 +75,8 @@ public class MinesweeperView extends View {
             canvas.drawLine(0, startY, getWidth(), startY, linePaint);
         }
 
+        boolean hasSafeTiles = false;
+
         // Draw tiles
         for (int i = 0; i < size; ++i) {
             for (int j = 0; j < size; ++j) {
@@ -83,8 +88,10 @@ public class MinesweeperView extends View {
                 imageBounds.set(left, top, right, bottom);
                 MinesweeperModel.ETileType currTile = model.getTile(i, j);
 
-                if (currTile == MinesweeperModel.ETileType.SAFE_CHECKED) {
-                    final int coloredPadding = 20;
+                if (currTile == MinesweeperModel.ETileType.SAFE) {
+                    hasSafeTiles = true;
+                } else if (currTile == MinesweeperModel.ETileType.SAFE_CHECKED) {
+                    final int coloredPadding = 10;
                     left += coloredPadding;
                     right -= coloredPadding;
                     top += coloredPadding;
@@ -106,6 +113,9 @@ public class MinesweeperView extends View {
                 }
             }
         }
+
+        if (!hasSafeTiles)
+            endGame(false);
     }
 
     @Override
@@ -120,7 +130,7 @@ public class MinesweeperView extends View {
                     break;
                 case BOMB:
                     model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.BOMB_LOSS);
-                    isGameOver = true;
+                    endGame(true);
                     break;
             }
 
@@ -128,5 +138,28 @@ public class MinesweeperView extends View {
         }
 
         return true;
+    }
+
+    private void endGame(boolean isLoss) {
+        isGameOver = true;
+
+        final String buttonText = "Play again";
+
+        final String message =
+            (isLoss ? "Whoops! You lost!" : "Congratulations! You won the game!") +
+            "\n\nPress \"" + buttonText + "\" to start a new game.";
+
+        Dialog dialog = new Dialog(getContext(), "Game Over!", message);
+        dialog.show();
+        dialog.getButtonAccept().setText(buttonText);
+
+        dialog.setOnAcceptButtonClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent toIntroActivity = new Intent(getContext(), IntroActivity.class);
+                toIntroActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // https://developer.android.com/reference/android/content/Intent.html#FLAG_ACTIVITY_NEW_TASK
+                getContext().startActivity(toIntroActivity);
+            }
+        });
     }
 }
