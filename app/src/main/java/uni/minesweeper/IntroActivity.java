@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.gc.materialdesign.views.ButtonFloat;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.gc.materialdesign.views.Slider;
+import uni.minesweeper.model.MinesweeperModel;
 
 public class IntroActivity extends AppCompatActivity {
 
@@ -18,8 +19,30 @@ public class IntroActivity extends AppCompatActivity {
     private int boardSize;
 
     @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putInt("boardSize", boardSize);
+        savedInstanceState.putInt("totalMines", totalMines);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            boardSize = savedInstanceState.getInt("boardSize");
+            totalMines = savedInstanceState.getInt("totalMines");
+
+            Slider sizeSlider = findViewById(R.id.boardSlider);
+            sizeSlider.setValue(boardSize);
+
+            final TextView sizeTextView = findViewById(R.id.sizeTextView);
+            sizeTextView.setText(getApplicationContext().getString(R.string.board_size, String.valueOf(boardSize)));
+
+            final TextView minesTextView = findViewById(R.id.minesTextView);
+            minesTextView.setText(String.valueOf(totalMines));
+        }
+
         setContentView(R.layout.activity_intro);
 
         final TextView sizeTextView = findViewById(R.id.sizeTextView);
@@ -56,14 +79,15 @@ public class IntroActivity extends AppCompatActivity {
 
         final ButtonRectangle btnPlay = findViewById(R.id.btnPlay);
         final IntroActivity _this = this;
+        final MinesweeperModel model = MinesweeperModel.getSingletonInstance();
 
         btnPlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent playIntent = new Intent(_this, PlayActivity.class);
-                playIntent.putExtra("boardSize", boardSize);
-                playIntent.putExtra("totalMines", totalMines);
-                startActivity(playIntent);
+                model.setSize(boardSize);
+                model.setTotalMines(totalMines);
+                model.resetModel();
+                startActivity(new Intent(_this, PlayActivity.class));
             }
         });
     }

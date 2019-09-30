@@ -8,6 +8,7 @@
     android:weightSum="20">
 
   <uni.minesweeper.view.MinesweeperView
+      android:id="@+id/minesweeperView"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="19" />

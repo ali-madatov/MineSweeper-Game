@@ -10,22 +10,14 @@ import uni.minesweeper.model.MinesweeperModel;
 
 public class PlayActivity extends AppCompatActivity {
     private boolean isFlagMode = false;
+    private MinesweeperModel model = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Intent startIntent = getIntent();
-
-        int boardSize = startIntent.getIntExtra("boardSize", 0);
-        int totalMines = startIntent.getIntExtra("totalMines", 0);
-
-        final MinesweeperModel model = MinesweeperModel.getSingletonInstance();
-        model.setSize(boardSize);
-        model.setTotalMines(totalMines);
-        model.resetModel();
-
         setContentView(R.layout.activity_play);
+
+        model = MinesweeperModel.getSingletonInstance();
 
         final ToggleButton btnToggleMode = findViewById(R.id.btnToggleMode);
         btnToggleMode.setText(getApplicationContext().getString(R.string.mode, isFlagMode ? "FLAG" : "CHECK"));

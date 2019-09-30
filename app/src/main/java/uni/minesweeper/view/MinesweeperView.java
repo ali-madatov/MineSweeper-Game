@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,6 +34,25 @@ public class MinesweeperView extends View {
 
     private Rect imageBounds;
     private boolean isGameOver = false;
+
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("state", super.onSaveInstanceState());
+        bundle.putBoolean("isGameOver", isGameOver);
+        return bundle;
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        if (state != null) {
+            Bundle bundle = (Bundle) state;
+            isGameOver = bundle.getBoolean("isGameOver");
+            state = bundle.getParcelable("state");
+        }
+
+        super.onRestoreInstanceState(state);
+    }
 
     public MinesweeperView(Context context, AttributeSet attrs) {
         super(context, attrs);
