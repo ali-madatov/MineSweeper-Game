@@ -79,7 +79,6 @@ public class MinesweeperView extends View {
             canvas.drawLine(0, startY, getWidth(), startY, linePaint);
         }
 
-        boolean hasSafeTiles = false;
         boolean allBombsFlagged = true;
 
         // Draw tiles
@@ -93,9 +92,7 @@ public class MinesweeperView extends View {
                 imageBounds.set(left, top, right, bottom);
                 MinesweeperModel.ETileType currTile = model.getTile(i, j);
 
-                if (currTile == MinesweeperModel.ETileType.SAFE) {
-                    hasSafeTiles = true;
-                } else if (currTile == MinesweeperModel.ETileType.SAFE_CHECKED) {
+                if (currTile == MinesweeperModel.ETileType.SAFE_CHECKED) {
                     final int coloredPadding = 10;
                     left += coloredPadding;
                     right -= coloredPadding;
@@ -132,7 +129,7 @@ public class MinesweeperView extends View {
             }
         }
 
-        if (!hasSafeTiles || allBombsFlagged)
+        if (!isGameOver && allBombsFlagged)
             endGame(false);
     }
 
