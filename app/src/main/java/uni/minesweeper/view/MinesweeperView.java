@@ -1,5 +1,6 @@
 package uni.minesweeper.view;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Canvas;
@@ -13,12 +14,12 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import androidx.core.content.res.ResourcesCompat;
-import com.gc.materialdesign.widgets.Dialog;
 import uni.minesweeper.IntroActivity;
 import uni.minesweeper.R;
 import uni.minesweeper.model.MinesweeperModel;
 
 public class MinesweeperView extends View {
+    int score =0;
     private Paint linePaint;
     private Paint backgroundPaint;
     private Paint paddingPaint;
@@ -59,19 +60,19 @@ public class MinesweeperView extends View {
 
         model = MinesweeperModel.getSingletonInstance();
 
-        bombDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_bomb, null);
-        bombLossDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_explosion, null);
-        flagDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_flag, null);
-        flagLossDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_broken_flag, null);
+        bombDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.icon_bomb, null);
+        bombLossDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.icon_explosion, null);
+        flagDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.icon_flag, null);
+        flagLossDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.icon_broken_flag, null);
         imageBounds = new Rect(0, 0, 0, 0);
 
         linePaint = new Paint();
-        linePaint.setColor(Color.DKGRAY);
+        linePaint.setColor(ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null));
         linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setStrokeWidth(5);
 
         backgroundPaint = new Paint();
-        backgroundPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.colorBg, null));
+        backgroundPaint.setColor(ResourcesCompat.getColor(getResources(), R.color.colorWhite, null));
         backgroundPaint.setStyle(Paint.Style.FILL);
 
         paddingPaint = new Paint();
@@ -79,7 +80,7 @@ public class MinesweeperView extends View {
         paddingPaint.setStyle(Paint.Style.FILL);
 
         paintText = new Paint();
-        paintText.setColor(Color.LTGRAY);
+        paintText.setColor(ResourcesCompat.getColor(getResources(), R.color.playTextColor, null));
     }
 
 
@@ -178,6 +179,7 @@ public class MinesweeperView extends View {
                     break;
                 case BOMB:
                     if (model.isFlagMode()) {
+                        score+=1;
                         model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.FLAG);
                     } else {
                         model.setTile(clickedRow, clickedCol, MinesweeperModel.ETileType.BOMB_LOSS);
@@ -197,8 +199,10 @@ public class MinesweeperView extends View {
         if (model.getTile(row, col) == MinesweeperModel.ETileType.SAFE_CHECKED)
             return;
 
-        if (model.getTile(row, col) == MinesweeperModel.ETileType.SAFE)
+        if (model.getTile(row, col) == MinesweeperModel.ETileType.SAFE) {
             model.setTile(row, col, MinesweeperModel.ETileType.SAFE_CHECKED);
+            score+=1;
+        }
 
         if (model.getNearbyBombs(row, col) == 0) {
             for (int i = row - 1; i <= row + 1; ++i) {
@@ -221,20 +225,21 @@ public class MinesweeperView extends View {
         final String buttonText = "Play again";
 
         final String message =
-            (isLoss ? "Whoops! You lost!" : "Congratulations! You won the game!") +
-                "\n\nPress \"" + buttonText + "\" to start a new game.";
+            (isLoss ? "Whoops! You lost!" : "Congratulations! You win!")+ "\n\nYour score is: "+String.valueOf(score);
 
-        Dialog dialog = new Dialog(getContext(), "Game Over!", message);
+//        Dialog dialog = new Dialog(getContext(), "Game Over!", message);
+        Dialog dialog = new Dialog(getContext());
         dialog.show();
-        dialog.getButtonAccept().setText(buttonText);
-
-        dialog.setOnAcceptButtonClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent toIntroActivity = new Intent(getContext(), IntroActivity.class);
-                toIntroActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // https://developer.android.com/reference/android/content/Intent.html#FLAG_ACTIVITY_NEW_TASK
-                getContext().startActivity(toIntroActivity);
-            }
-        });
+//        dialog.getButtonAccept().setText(buttonText);
+//
+//        dialog.setOnAcceptButtonClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent toIntroActivity = new Intent(getContext(), IntroActivity.class);
+//                toIntroActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                toIntroActivity.putExtra("score",score);
+//                getContext().startActivity(toIntroActivity);
+//            }
+//        });
     }
 }

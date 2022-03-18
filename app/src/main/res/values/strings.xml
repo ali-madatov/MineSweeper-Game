@@ -1,9 +1,27 @@
 <resources>
-  <string name="app_name">Minesweeper</string>
-  <string name="greetings">Welcome to Minesweeper!\nPlease enter your board size!</string>
-  <string name="board_size">Selected size: %1$sx%1$s</string>
-  <string name="mines">Select number of mines\n(min. 3)</string>
-  <string name="play">PLAY!</string>
-  <string name="mode">Mode: %1$s</string>
-  <string name="new_game">New game</string>
+    <string name="app_name">MineSweeper</string>
+    <string name="greetings">Welcome to MineSweeper!\nPlease enter your preferences</string>
+    <string name="board_size">Selected size: %1$sx%1$s</string>
+    <string name="mines">Select number of mines\n(min. 3)</string>
+    <string name="play">PLAY</string>
+    <string name="mode">Mode: %1$s</string>
+    <string name="new_game">New game</string>
+
+    <string-array name="sizes">
+        <item>Very small (5x5)</item>
+        <item>Small (6x6)</item>
+        <item>Medium (7x7)</item>
+        <item>Large (8x8)</item>
+        <item>Very large (9x9)</item>
+        <item>Very very large (10x10)</item>
+    </string-array>
+
+    <string-array name="mines">
+        <item>Very easy</item>
+        <item>Easy</item>
+        <item>Normal</item>
+        <item>Hard</item>
+        <item>Very hard</item>
+        <item>Super hard</item>
+    </string-array>
 </resources>

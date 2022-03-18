@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     android:padding="@dimen/padding"
     android:weightSum="20">
 
@@ -25,7 +26,12 @@
         android:id="@+id/btnToggleMode"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="8dp"
         android:text="@string/mode"
+        android:textColor="@color/playTextColor"
+        android:textStyle="italic"
         android:layout_weight="1" />
 
     <Button
@@ -33,6 +39,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/new_game"
+        android:textColor="@color/playTextColor"
+        android:textStyle="italic"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorWhite"
         tools:ignore="ButtonStyle"
         android:layout_weight="1" />
   </LinearLayout>

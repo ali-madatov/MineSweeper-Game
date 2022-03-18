@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/design_default_color_background">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imLogo"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
+        android:src="@drawable/bomb_logo"/>
+
+    <EditText
+        android:id="@+id/edtEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="250dp"
+        android:hint="Enter your email address"
+        android:textSize="25sp" />
+
+    <EditText
+        android:id="@+id/edtPwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtEmail"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="12dp"
+        android:hint="Enter your password"
+        android:textSize="25sp"
+        android:inputType="textPassword"/>
+
+    <EditText
+        android:id="@+id/edtConfirmPwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtPwd"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="12dp"
+        android:hint="Confirm your password"
+        android:inputType="textPassword"
+        android:textSize="25sp"/>
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtConfirmPwd"
+        android:layout_marginHorizontal="70dp"
+        android:layout_marginTop="20dp"
+        android:text = "Register"
+        android:background="@drawable/buttonshape"
+        android:textSize = "30sp"
+        android:textColor="@color/colorWhite"
+        android:padding="6dp"
+        android:textAllCaps="false"
+        android:textStyle="italic"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/haveAccount"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="I already have an account"
+        android:textColor="@color/colorPrimary"
+        android:background="@color/design_default_color_background"
+        android:textSize="14sp"
+        android:padding="8dp"
+        android:layout_marginTop="8dp"
+        style="?android:attr/borderlessButtonStyle"
+        android:textAllCaps="false"
+        android:textStyle="italic"
+        />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
